@@ -5,4 +5,6 @@
 
 set -euo pipefail
 
-gh run watch --exit-status && git push origin $(git rev-parse HEAD):main --tags
+# So I can keep committing while tests run.
+rev="$(git rev-parse HEAD)"
+gh run watch --exit-status && git push origin ${rev}:main --tags
