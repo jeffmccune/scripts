@@ -1,0 +1,8 @@
+#! /bin/bash
+#
+# Purpose: Auto merge a pr after tests pass
+# Usage: automerge
+
+set -euo pipefail
+
+gh run watch --exit-status && git push origin $(git rev-parse HEAD):main --tags
