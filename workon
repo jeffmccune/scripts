@@ -1,0 +1,25 @@
+#! /bin/bash
+#
+# Purpose: Check out a well named branch for Github issue 123
+# Usage: workon 123
+#
+set -euo pipefail
+
+# tmpdir="$(mktemp -d)"
+# finish() {
+#   rm -rf "$tmpdir"
+# }
+# trap finish EXIT
+
+# issue="$(git rev-parse --abbrev-ref HEAD | tr -d -c 0-9)"
+# if [[ -z $issue ]]; then
+#   echo "could not extract issue number from branch name" >&2
+#   exit 1
+# fi
+
+issue="$1"
+title="$(gh issue view --json title --jq '.title | split(" ")[0:2] | join("-") | ascii_downcase' $issue)"
+branch_name="${USER}/${issue}-${title}"
+
+git branch --track "${branch_name}" origin/main || true
+git checkout "${branch_name}"

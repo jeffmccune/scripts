@@ -1,0 +1,19 @@
+#! /bin/bash
+#
+set -euo pipefail
+
+# tmpdir="$(mktemp -d)"
+# finish() {
+#   rm -rf "$tmpdir"
+# }
+# trap finish EXIT
+
+issue="${1:-$(git rev-parse --abbrev-ref HEAD | tr -d -c 0-9)}"
+if [[ -z $issue ]]; then
+  echo "could not extract issue number from branch name" >&2
+  exit 1
+fi
+
+title="$(gh issue view --json title --jq .title $issue)"
+url="$(gh issue view --json url --jq .url $issue)"
+echo "[${title}](${url})"

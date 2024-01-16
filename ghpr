@@ -1,0 +1,25 @@
+#! /bin/bash
+#
+# Purpose: Open a pr which closes an issue when merged
+# Usage: ghpr [issue]
+#
+set -euo pipefail
+
+tmpdir="$(mktemp -d)"
+finish() {
+  rm -rf "$tmpdir"
+}
+trap finish EXIT
+
+issue="${1:-$(git rev-parse --abbrev-ref HEAD | tr -d -c 0-9)}"
+if [[ -z $issue ]]; then
+  echo "could not extract issue number from branch name" >&2
+  exit 1
+fi
+
+git cm | head -1 > ${tmpdir}/title.txt
+git cm | tail +3 > ${tmpdir}/body.txt
+echo >> ${tmpdir}/body.txt
+echo "Closes: #${issue}" >> ${tmpdir}/body.txt
+
+gh pr create --title "$(<${tmpdir}/title.txt)" --body-file ${tmpdir}/body.txt

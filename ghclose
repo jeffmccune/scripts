@@ -1,0 +1,32 @@
+#! /bin/bash
+#
+# Purpose: Close a github issue
+# Usage: ghclose -b 'closing via #246' -- 221 231
+#
+set -euo pipefail
+
+# tmpdir="$(mktemp -d)"
+# finish() {
+#   rm -rf "$tmpdir"
+# }
+# trap finish EXIT
+
+declare -a ghargs
+
+while [[ $# -gt 0 ]]; do
+  if [[ $1 == "--" ]]; then
+    shift
+    break
+  else
+    ghargs+="$1"
+    shift
+  fi
+done
+
+set -x
+
+while [[ $# -gt 0 ]]; do
+  gh issue comment "${ghargs[@]}" "$1"
+  gh issue close "$1"
+  shift
+done
