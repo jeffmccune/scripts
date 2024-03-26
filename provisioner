@@ -1,0 +1,3 @@
+#! /bin/bash
+export KUBECONFIG="${HOME}/.holos/kubeconfig.provisioner"
+exec kubectl "$@"

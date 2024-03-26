@@ -18,12 +18,10 @@ while [[ $# -gt 0 ]]; do
     shift
     break
   else
-    ghargs+="$1"
+    ghargs+=("$1")
     shift
   fi
 done
-
-set -x
 
 while [[ $# -gt 0 ]]; do
   gh issue comment "${ghargs[@]}" "$1"
